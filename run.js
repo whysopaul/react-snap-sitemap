@@ -102,7 +102,7 @@ const formatDate = (date) => {
     .forEach(url => {
       const isMainPage = url + "/" === baseUrl;
       const u = urlset.ele('url');
-      if (!isMainPage && shouldAddSlashes) {
+      if (shouldAddSlashes) {
         u.ele("loc", url + "/");
       } else {
         u.ele('loc', url);
