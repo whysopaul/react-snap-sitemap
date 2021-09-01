@@ -10,7 +10,14 @@ This package allows you to generate a sitemap.xml based off the created director
 
 ## Usage
 
-Add `&& react-snap-sitemap --base-url=http://example.com/` to the end of your postBuild script after you've the `react-snap` command.
+Add `& react-snap-sitemap --base-url=http://example.com/` 
+to the end of your `postBuild` script after you've run the `react-snap` command.
+For example: <pre>
+"scripts": {
+"start": "react-scripts start",
+"build": "react-scripts build",
+"postbuild": "react-snap & react-snap-sitemap --base-url=https://finance-d.com/ --add-slash=true --change-frequency=daily"
+},</pre>
 
 To blacklist specific urls, add them with `--black-list={url},{url2},...`
 
