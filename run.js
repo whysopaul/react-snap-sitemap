@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
 const builder = require('xmlbuilder');
-const {readdir, writeFile, lstat} = require('fs');
-const {promisify} = require('util');
+const { readdir, writeFile, lstat } = require('fs');
+const { promisify } = require('util');
 const args = process.argv;
 
 const preFormattedBaseUrl = args.find((arg) => arg.startsWith('--base-url='));
 const exclusionList = args.find((arg) => arg.startsWith('--black-list='));
 const preFormattedChangeFrequency = args.find((arg) => arg.startsWith('--change-frequency='));
 const addSlash = args.find((arg) => arg.startsWith('--add-slash='));
+const outDir = args.find((arg) => arg.startsWith('--out-dir=')) || 'build';
 let blackList = [];
 
 if (exclusionList) {
@@ -35,7 +36,7 @@ if (preFormattedChangeFrequency) {
 }
 
 const shouldAddSlashes = !!addSlash;
-console.log({shouldAddSlashes});
+console.log({ shouldAddSlashes });
 
 const asyncReaddir = promisify(readdir), asyncWriteFile = promisify(writeFile), asyncLStat = promisify(lstat);
 
@@ -48,7 +49,7 @@ const asyncForEach = async (array, callback) => {
 let allRoots = [];
 
 const readSite = async (dir) => {
-  const directory = await asyncReaddir(dir, {withFileTypes: true});
+  const directory = await asyncReaddir(dir, { withFileTypes: true });
 
   await asyncForEach(directory, async fileOrDirectory => {
     let path = fileOrDirectory;
@@ -88,11 +89,11 @@ const formatDate = (date) => {
 };
 
 (async () => {
-  await readSite('build');
+  await readSite(outDir);
 
-  const siteUrls = allRoots.map(root => root.replace('build/', baseUrl).replace('/index.html', ''));
+  const siteUrls = allRoots.map(root => root.replace(outDir + '/', baseUrl).replace('/index.html', ''));
 
-  const urlset = builder.create('urlset', {encoding: 'UTF-8', version: '1.0'});
+  const urlset = builder.create('urlset', { encoding: 'UTF-8', version: '1.0' });
 
   urlset.attribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
@@ -115,9 +116,9 @@ const formatDate = (date) => {
       isMainPage ? u.ele('priority', "1.0") : u.ele('priority', "0.5");
     });
 
-  const sitemap = urlset.end({pretty: true});
+  const sitemap = urlset.end({ pretty: true });
 
-  await asyncWriteFile('build/sitemap.xml', sitemap);
+  await asyncWriteFile(outDir + '/sitemap.xml', sitemap);
 
-  console.log('🙂 Successfully built sitemap.xml in build directory');
+  console.log('🙂 Successfully built sitemap.xml in "' + outDir + '" directory');
 })();
