@@ -9,7 +9,7 @@ const preFormattedBaseUrl = args.find((arg) => arg.startsWith('--base-url='));
 const exclusionList = args.find((arg) => arg.startsWith('--black-list='));
 const preFormattedChangeFrequency = args.find((arg) => arg.startsWith('--change-frequency='));
 const addSlash = args.find((arg) => arg.startsWith('--add-slash='));
-const outDir = args.find((arg) => arg.startsWith('--out-dir=')) || 'build';
+const outDir = args.find((arg) => arg.startsWith('--out-dir='))?.split('=')[1] || 'build';
 let blackList = [];
 
 if (exclusionList) {
