@@ -24,3 +24,5 @@ To blacklist specific urls, add them with `--black-list={url},{url2},...`
 You can also add `--change-frequency=always|daily|weekly|monthly|yearly|never`.
 
 If you need trailing slashes at the end of your URLs add `--add-slash=true`
+
+Change out directory: `--out-dir={directory}`. Default: `build`.
